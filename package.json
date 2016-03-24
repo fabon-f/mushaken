@@ -1,0 +1,19 @@
+{
+  "name": "mushaken",
+  "version": "0.0.1",
+  "description": "文化祭用のWiiリモコン音ゲー",
+  "main": "dest/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron .",
+    "watch": "rm -rf dest && mkdir dest && node script/html-symlink && babel src --out-dir dest --watch"
+  },
+  "author": "hinata",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-cli": "^6.6.5",
+    "babel-plugin-transform-es2015-destructuring": "^6.6.5",
+    "babel-plugin-transform-es2015-parameters": "^6.7.0",
+    "electron-prebuilt": "^0.37.2"
+  }
+}
