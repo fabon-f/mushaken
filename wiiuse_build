@@ -1,2 +1,2 @@
 #!/bin/sh
-cd deps/wiiuse && cmake . -DCMAKE_INSTALL_PREFIX=../../build && make wiiuse && make install
+mkdir tmp && cd tmp && cmake ../deps/wiiuse -DCMAKE_INSTALL_PREFIX=../build && make && make install && cd .. && rm -rf tmp
