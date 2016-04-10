@@ -1,0 +1,4 @@
+[submodule "deps/wiiuse"]
+	path = deps/wiiuse
+	url = https://github.com/rpavlik/wiiuse.git
+	ignore = dirty
