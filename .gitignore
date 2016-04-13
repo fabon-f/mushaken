@@ -34,3 +34,4 @@ node_modules
 
 dest/
 /build
+/wiimote-connect/wiimote-connect

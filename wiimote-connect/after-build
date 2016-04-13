@@ -1,0 +1,7 @@
+#!/bin/sh
+rootpath=$(dirname $(pwd))
+case $(uname) in
+    "Darwin" )
+        install_name_tool -change libwiiuse.dylib "$rootpath/build/lib/libwiiuse.dylib" wiimote-connect
+        ;;
+esac
