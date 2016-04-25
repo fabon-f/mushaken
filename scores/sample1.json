@@ -1,0 +1,16 @@
+{
+    "BPM": 60,
+    "title": "sample 1",
+    "delay": 1,
+    "source": "sample1.mp3",
+    "notes": [
+        { "type": "a", "timing": 1 },
+        { "type": "b", "timing": 1.5 },
+        { "type": "left", "timing": 2 },
+        { "type": "up", "timing": 2.5 },
+        { "type": "down", "timing": 3 },
+        { "type": "right", "timing": 3.5 },
+        { "type": "a-hold", "beginning": 4, "end": 4.5 },
+        { "type": "b-hold", "beginning": 5, "end": 5.5 }
+    ]
+}

@@ -15,5 +15,8 @@
     "babel-plugin-transform-es2015-destructuring": "^6.6.5",
     "babel-plugin-transform-es2015-parameters": "^6.7.0",
     "electron-prebuilt": "^0.37.2"
+  },
+  "dependencies": {
+    "co": "^4.6.0"
   }
 }
