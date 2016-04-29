@@ -153,7 +153,7 @@
 
             const gameStartTime = Date.now();
 
-            ticker.addEventListener("tick", event => {
+            ticker.addEventListener("tick", () => {
                 for (let note of notes) {
                     // note.displayObject.x = note.displayObject.x - NOTES_SPEED / ticker.framerate;
                     note.displayObject.x = NOTES_SPEED * score.delay
@@ -166,7 +166,6 @@
             inputSource.on("data", ({ event, key }) => {
                 const elapsedTime = (Date.now() - gameStartTime) / 1000 - score.delay;
                 const isArrowKey = ["left","right","up","down"].includes(key);
-                console.log(notes, elapsedTime, key);
                 if (event === "down" && isArrowKey) {
                     let nearestNote = null;
                     for (let note of notes) {
