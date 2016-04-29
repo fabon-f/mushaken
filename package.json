@@ -11,10 +11,10 @@
   "author": "hinata",
   "license": "MIT",
   "devDependencies": {
-    "babel-cli": "^6.6.5",
+    "babel-cli": "^6.7.7",
     "babel-plugin-transform-es2015-destructuring": "^6.6.5",
     "babel-plugin-transform-es2015-parameters": "^6.7.0",
-    "electron-prebuilt": "^0.37.2"
+    "electron-prebuilt": "^0.37.7"
   },
   "dependencies": {
     "co": "^4.6.0"
