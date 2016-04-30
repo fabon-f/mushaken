@@ -5,6 +5,7 @@
     const co = require("co");
     const loadScore = require("./load_score");
     const deleteElement = require("./array_delete");
+    const startTiming = require("./start_timing");
     const gameWidth = window.innerWidth;
     const gameHeight = window.innerHeight;
 
@@ -98,6 +99,19 @@
         }
     }
 
+    function judge(gap, maxGap) {
+        if (0 <= gap / maxGap && gap / maxGap < 0.3) {
+            return "perfect";
+        }
+        if (0.3 <= gap / maxGap && gap / maxGap < 0.75) {
+            return "good";
+        }
+        if (0.75 <= gap / maxGap && gap / maxGap <= 1) {
+            return "bad";
+        }
+        return "miss";
+    }
+
     function startGame(scoreName, inputSource) {
         return co(function*() {
             yield preload();
@@ -153,13 +167,27 @@
 
             const gameStartTime = Date.now();
 
+            let currentHoldNote = null;
+
+            let result = {
+                perfect: 0,
+                good: 0,
+                bad: 0
+            };
+
             ticker.addEventListener("tick", () => {
                 for (let note of notes) {
-                    // note.displayObject.x = note.displayObject.x - NOTES_SPEED / ticker.framerate;
                     note.displayObject.x = NOTES_SPEED * score.delay
                     + judgeLine.x
                     + (60 * NOTES_SPEED / score.BPM) * (note.type.includes("hold") ? note.beginning - 1 : note.timing - 1)
                     - (Date.now() - gameStartTime) / 1000 * NOTES_SPEED;
+                }
+                const elapsedTime = (Date.now() - gameStartTime) / 1000 - score.delay;
+                if (currentHoldNote !== null && elapsedTime - (currentHoldNote.end - 1) * 60 / score.BPM > JUDGE_RANGE) {
+                    console.log("hold failed");
+                    stage.removeChild(currentHoldNote.displayObject);
+                    deleteElement(notes, currentHoldNote);
+                    currentHoldNote = null;
                 }
                 stage.update();
             });
@@ -169,27 +197,55 @@
                 if (event === "down" && isArrowKey) {
                     let nearestNote = null;
                     for (let note of notes) {
+                        const gap = Math.abs(elapsedTime - (note.timing - 1) * 60 / score.BPM);
                         if (note.type !== key) { continue; }
-                        if (Math.abs(elapsedTime - (note.timing - 1) * 60 / score.BPM) > JUDGE_RANGE) { continue; }
+                        if (gap > JUDGE_RANGE) { continue; }
                         if (nearestNote === null) {
                             nearestNote = note;
                         } else {
-                            if (Math.abs(elapsedTime - (note.timing - 1) * 60 / score.BPM) < Math.abs(elapsedTime - (nearestNote.timing - 1) * 60 / score.BPM)) {
+                            if (gap < Math.abs(elapsedTime - (nearestNote.timing - 1) * 60 / score.BPM)) {
                                 nearestNote = note;
                             }
                         }
                     }
                     if (nearestNote === null) { return; }
+
+                    result[judge(Math.abs(elapsedTime - (nearestNote.timing - 1) * 60 / score.BPM), JUDGE_RANGE)]++;
+
                     stage.removeChild(nearestNote.displayObject);
                     deleteElement(notes, nearestNote);
                     return;
                 }
-                if (event === "down" && ["A","B"].includes(key)) {
-                    // AB key down
+                if (event === "down" && ["a","b"].includes(key)) {
+                    let nearestNote = null;
+                    for (let note of notes) {
+                        if (note.type !== key && note.type !== `${key}-hold`) { continue; }
+                        if (Math.abs(elapsedTime - (startTiming(note) - 1) * 60 / score.BPM) > JUDGE_RANGE) { continue; }
+                        if (nearestNote === null) {
+                            nearestNote = note;
+                        } else if (Math.abs(elapsedTime - (startTiming(note) - 1) * 60 / score.BPM) < Math.abs(elapsedTime - (startTiming(nearestNote) - 1)) * 60 / score.BPM) {
+                            nearestNote = note;
+                        }
+                    }
+                    if (nearestNote === null) { return; }
+                    if (nearestNote.type.includes("hold")) {
+                        currentHoldNote = nearestNote;
+                        currentHoldNote.startGap = Math.abs(elapsedTime - (nearestNote.beginning - 1) * 60 / score.BPM);
+                    } else {
+                        result[judge(Math.abs(elapsedTime - (nearestNote.timing - 1) * 60 / score.BPM), JUDGE_RANGE)]++;
+                        stage.removeChild(nearestNote.displayObject);
+                        deleteElement(notes, nearestNote);
+                    }
                     return;
                 }
-                if (event === "up" && !isArrowKey) {
-                    // AB key up
+                if (event === "up" && !isArrowKey && currentHoldNote !== null) {
+                    const gap = Math.abs(elapsedTime - (currentHoldNote.end - 1) * 60 / score.BPM);
+                    if (gap <= JUDGE_RANGE) {
+                        result[judge(gap + currentHoldNote.startGap, JUDGE_RANGE * 2)]++;
+                    }
+                    stage.removeChild(currentHoldNote.displayObject);
+                    deleteElement(notes, currentHoldNote);
+                    currentHoldNote = null;
                 }
             });
         });
