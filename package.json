@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron .",
-    "watch": "rm -rf dest && mkdir dest && node script/html-symlink && babel src --out-dir dest --watch"
+    "watch": "rm -rf dest && mkdir dest && node script/html-symlink && babel src --out-dir dest --source-maps --watch"
   },
   "author": "hinata",
   "license": "MIT",
