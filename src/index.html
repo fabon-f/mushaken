@@ -4,17 +4,27 @@
     <meta charset="UTF-8">
     <title>MUSHAKEN</title>
     <style>
-        html, body {
+        html, body, #mushaken {
             height: 100%;
             width: 100%;
             margin: 0;
             padding: 0;
             overflow: hidden;
+            position: relative;
+        }
+        #mushaken-score {
+            position: absolute;
+            top: 10%;
+            right: 10%;
+            font-size: 50px;
         }
     </style>
 </head>
 <body>
-    <canvas id="mushaken-main"></canvas>
+    <div id="mushaken">
+        <canvas id="mushaken-main"></canvas>
+        <div id="mushaken-score">0</div>
+    </div>
     <script src="../lib/easeljs-0.8.2.min.js"></script>
     <script src="mushaken.js"></script>
 </body>

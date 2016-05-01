@@ -6,6 +6,7 @@
     const loadScore = require("./load_score");
     const deleteElement = require("./array_delete");
     const startTiming = require("./start_timing");
+    const calculateScore = require("./calculate_score");
     const gameWidth = window.innerWidth;
     const gameHeight = window.innerHeight;
 
@@ -13,12 +14,18 @@
      * preload assets
      * @return {Promise}
      */
-    function preload() {
-        return new Promise(resolve => {
+    function preload(musicFile) {
+        return Promise.all([new Promise(resolve => {
             const image = new Image();
             image.onload = resolve;
             image.src = "../img/note_arrow.svg";
-        });
+        }), new Promise(resolve => {
+            const music = new Audio();
+            music.src = `../musics/${musicFile}`;
+            music.addEventListener("canplaythrough", () => {
+                resolve(music);
+            });
+        })]);
     }
 
     /**
@@ -114,8 +121,8 @@
 
     function startGame(scoreName, inputSource) {
         return co(function*() {
-            yield preload();
             const score = yield loadScore(scoreName);
+            const [,music] = yield preload(score.source);
             const canvas = document.getElementById("mushaken-main");
             canvas.width = gameWidth;
             canvas.height =  gameHeight;
@@ -157,6 +164,10 @@
                 }
             }
 
+            console.log(music.duration);
+
+            music.play();
+
             stage.update();
 
             const ticker = createjs.Ticker;
@@ -175,6 +186,8 @@
                 bad: 0
             };
 
+            const scoreBoard = document.getElementById("mushaken-score");
+
             ticker.addEventListener("tick", () => {
                 for (let note of notes) {
                     note.displayObject.x = NOTES_SPEED * score.delay
@@ -188,6 +201,10 @@
                     stage.removeChild(currentHoldNote.displayObject);
                     deleteElement(notes, currentHoldNote);
                     currentHoldNote = null;
+                }
+                if (music.duration + 0.5 < elapsedTime + score.delay) {
+                    ticker.removeAllEventListeners("tick");
+                    console.log(calculateScore(result, score.notes.length));
                 }
                 stage.update();
             });
@@ -211,6 +228,7 @@
                     if (nearestNote === null) { return; }
 
                     result[judge(Math.abs(elapsedTime - (nearestNote.timing - 1) * 60 / score.BPM), JUDGE_RANGE)]++;
+                    scoreBoard.textContent = calculateScore(result, score.notes.length);
 
                     stage.removeChild(nearestNote.displayObject);
                     deleteElement(notes, nearestNote);
@@ -235,6 +253,8 @@
                         result[judge(Math.abs(elapsedTime - (nearestNote.timing - 1) * 60 / score.BPM), JUDGE_RANGE)]++;
                         stage.removeChild(nearestNote.displayObject);
                         deleteElement(notes, nearestNote);
+
+                        scoreBoard.textContent = calculateScore(result, score.notes.length);
                     }
                     return;
                 }
@@ -242,6 +262,7 @@
                     const gap = Math.abs(elapsedTime - (currentHoldNote.end - 1) * 60 / score.BPM);
                     if (gap <= JUDGE_RANGE) {
                         result[judge(gap + currentHoldNote.startGap, JUDGE_RANGE * 2)]++;
+                        scoreBoard.textContent = calculateScore(result, score.notes.length);
                     }
                     stage.removeChild(currentHoldNote.displayObject);
                     deleteElement(notes, currentHoldNote);
