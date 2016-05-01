@@ -164,8 +164,6 @@
                 }
             }
 
-            console.log(music.duration);
-
             music.play();
 
             stage.update();
@@ -204,6 +202,7 @@
                 }
                 if (music.duration + 0.5 < elapsedTime + score.delay) {
                     ticker.removeAllEventListeners("tick");
+                    inputSource.close();
                     console.log(calculateScore(result, score.notes.length));
                 }
                 stage.update();
