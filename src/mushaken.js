@@ -247,6 +247,8 @@
                     if (nearestNote === null) { return; }
                     if (nearestNote.type.includes("hold")) {
                         currentHoldNote = nearestNote;
+                        currentHoldNote.displayObject.graphics.beginFill(currentHoldNote.type === "a-hold" ? "#b33" : "#22c")
+                        .drawRect(0,0,(currentHoldNote.end - currentHoldNote.beginning) * NOTES_SPEED,60);
                         currentHoldNote.startGap = Math.abs(elapsedTime - (nearestNote.beginning - 1) * 60 / score.BPM);
                     } else {
                         result[judge(Math.abs(elapsedTime - (nearestNote.timing - 1) * 60 / score.BPM), JUDGE_RANGE)]++;
