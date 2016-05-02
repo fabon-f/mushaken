@@ -272,10 +272,19 @@
     }
 
     ipcRenderer.on("input", (event, inputType) => {
+        const button = document.getElementById("start-button");
         if (inputType === "key") {
-            startGame("zousan", require("./keyboard_input")()).catch(error => console.error(error));
+            button.addEventListener("click", () => {
+                document.getElementById("start").parentNode.removeChild(document.getElementById("start"));
+                document.getElementById("mushaken").style.display = "block";
+                startGame("zousan", require("./keyboard_input")()).catch(error => console.error(error));
+            });
         } else {
-            startGame("zousan", require("./wiimote_input")()).catch(error => console.error(error));
+            button.addEventListener("click", () => {
+                document.getElementById("start").parentNode.removeChild(document.getElementById("start"));
+                document.getElementById("mushaken").style.display = "block";
+                startGame("zousan", require("./wiimote_input")()).catch(error => console.error(error));
+            });
         }
     });
     ipcRenderer.send("input");
