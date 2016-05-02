@@ -2,6 +2,8 @@
 /* global createjs */
 
 (() => {
+    const electron = require("electron");
+    const ipcRenderer = electron.ipcRenderer;
     const co = require("co");
     const loadScore = require("./load_score");
     const deleteElement = require("./array_delete");
@@ -270,5 +272,13 @@
             });
         });
     }
-    startGame("sample1", require("./wiimote_input")()).catch(error => console.error(error));
+
+    ipcRenderer.on("input", (event, inputType) => {
+        if (inputType === "key") {
+            startGame("zousan", require("./keyboard_input")()).catch(error => console.error(error));
+        } else {
+            startGame("zousan", require("./wiimote_input")()).catch(error => console.error(error));
+        }
+    });
+    ipcRenderer.send("input");
 }) ();

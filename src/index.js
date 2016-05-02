@@ -5,6 +5,7 @@ const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 const path = require("path");
 const childProcess = require("child_process");
+const ipcMain = electron.ipcMain;
 
 var mainWindow = null;
 
@@ -20,6 +21,22 @@ app.on("window-all-closed", () => {
 });
 
 app.on("ready", () => {
+    ipcMain.on("input", ({ sender }) => {
+        if (process.argv[2] === "key") {
+            sender.send("input", "key");
+        } else {
+            sender.send("input", "wiimote");
+        }
+    });
+    if (process.argv[2] === "key") {
+        const { width, height } =  electron.screen.getPrimaryDisplay().workAreaSize;
+        mainWindow = new BrowserWindow({ width, height });
+        mainWindow.loadURL("file://" + path.join(__dirname, "index.html"));
+        mainWindow.on("closed", () => {
+            mainWindow = null;
+        });
+        return;
+    }
     let flag = 0;
     const wiimote = childProcess.spawn(path.join(__dirname, "../build/bin/wiimote-connect"));
     process.on("exit", () => {
