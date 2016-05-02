@@ -270,5 +270,5 @@
             });
         });
     }
-    startGame("sample1", require("./keyboard_input")()).catch(error => console.error(error));
+    startGame("sample1", require("./wiimote_input")()).catch(error => console.error(error));
 }) ();

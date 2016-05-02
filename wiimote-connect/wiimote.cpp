@@ -23,11 +23,12 @@ void handle_event(wiimote* wiimote) {
         printf("B released\n");
     }
     if (WIIUSE_USING_ACC(wiimote)) {
-        printf("%d %d %d\n", wiimote->accel.x, wiimote->accel.y, wiimote->accel.z);
+        printf("%d %d\n", wiimote->accel.x, wiimote->accel.z);
     }
 }
 
 int main(int argc, char const *argv[]) {
+    setvbuf(stdout, 0, _IONBF, 0);
     wiimote** wiimotes = wiiuse_init(3);
     const int TIMEOUT = 3;
     int found = wiiuse_find(wiimotes, 3, TIMEOUT);
@@ -48,6 +49,8 @@ int main(int argc, char const *argv[]) {
     if (signal(SIGINT, handle_sigint) == SIG_ERR) {
         fprintf(stderr, "Warning: unable to handle signal\n");
     }
+
+    printf("connected\n");
 
     while (WIIMOTE_IS_CONNECTED(wiimote) && !exit_flag) {
         if (wiiuse_poll(wiimotes, 3)) {
