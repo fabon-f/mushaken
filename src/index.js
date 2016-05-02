@@ -41,10 +41,15 @@ app.on("ready", () => {
     const wiimote = childProcess.spawn(path.join(__dirname, "../build/bin/wiimote-connect"));
     process.on("exit", () => {
         wiimote.kill("SIGINT");
-    })
+    });
     wiimote.on("error", (error) => {
         console.error(error);
     });
+    wiimote.on("close", () => {
+        console.log("Unable to connect to wiimote");
+        app.quit();
+    });
+    wiimote.stderr.pipe(process.stderr);
     wiimote.stdout.on("data", data => {
         if (flag === 0) {
             flag++;

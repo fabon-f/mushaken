@@ -87,19 +87,17 @@
             }
             case "a-hold": {
                 const note = new createjs.Shape();
-                note.graphics.beginFill("#F00").arc(size / 2, size / 2, size / 2, Math.PI / 2, Math.PI * 3 / 2)
-                .drawRect(size / 2, 0, options.width, size)
-                .arc(size / 2 + options.width, size / 2, size / 2, -Math.PI / 2, Math.PI / 2);
-                note.regX = size / 2;
+                note.graphics.beginFill("#F00")
+                .drawRect(0, 0, options.width, size);
+                note.regX = 0;
                 note.regY = size / 2;
                 return note;
             }
             case "b-hold": {
                 const note = new createjs.Shape();
-                note.graphics.beginFill("#00F").arc(size / 2, size / 2, size / 2, Math.PI / 2, Math.PI * 3 / 2)
-                .drawRect(size / 2, 0, options.width, size)
-                .arc(size / 2 + options.width, size / 2, size / 2, -Math.PI / 2, Math.PI / 2);
-                note.regX = size / 2;
+                note.graphics.beginFill("#00F")
+                .drawRect(0, 0, options.width, size);
+                note.regX = 0;
                 note.regY = size / 2;
                 return note;
             }
