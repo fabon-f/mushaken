@@ -99,7 +99,7 @@ app.on("ready", () => {
 
                     // console.log((x - 133) / 256);
 
-                    if (x < 100) {
+                    if (x < 105) {
                         if (state.x !== "left") {
                             state.x = "left";
                             mainWindow.webContents.send("wiimote", {
@@ -108,7 +108,7 @@ app.on("ready", () => {
                             });
                         }
                     }
-                    if (x > 165) {
+                    if (x > 160) {
                         if (state.x !== "right") {
                             state.x = "right";
                             mainWindow.webContents.send("wiimote", {
@@ -119,14 +119,14 @@ app.on("ready", () => {
                     }
 
                     // console.log((z - 156) / 256);
-                    if (z < 120 && state.z !== "up") {
+                    if (z < 125 && state.z !== "up") {
                         state.z = "up";
                         mainWindow.webContents.send("wiimote", {
                             event: "down",
                             key: "up"
                         });
                     }
-                    if (z > 190 && state.z !== "down") {
+                    if (z > 185 && state.z !== "down") {
                         state.z = "down";
                         mainWindow.webContents.send("wiimote", {
                             event: "down",

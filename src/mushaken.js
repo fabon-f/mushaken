@@ -247,7 +247,7 @@
                     if (nearestNote === null) { return; }
                     if (nearestNote.type.includes("hold")) {
                         currentHoldNote = nearestNote;
-                        currentHoldNote.displayObject.graphics.beginFill(currentHoldNote.type === "a-hold" ? "#b33" : "#22c")
+                        currentHoldNote.displayObject.graphics.beginFill(currentHoldNote.type === "a-hold" ? "#b33" : "#229")
                         .drawRect(0,0,(currentHoldNote.end - currentHoldNote.beginning) * NOTES_SPEED,60);
                         currentHoldNote.startGap = Math.abs(elapsedTime - (nearestNote.beginning - 1) * 60 / score.BPM);
                     } else {
@@ -274,7 +274,7 @@
     }
 
     ipcRenderer.on("input", (event, inputType) => {
-        const button = document.getElementById("start-button");
+        const button = document.getElementById("start");
         if (inputType === "key") {
             button.addEventListener("click", () => {
                 document.getElementById("start").parentNode.removeChild(document.getElementById("start"));
